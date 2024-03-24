@@ -37,7 +37,7 @@ if "chat_session" not in st.session_state:
 st.title("🤖 Gemini Pro - ChatBot")
 
 # Predefined prompt for the first message
-predefined_prompt = "As a 20-year expert in the fitness field, "
+predefined_prompt = "As a 20-year expert in the fitness field,ask me what you want to know "
 
 # Display the chat history
 for message in st.session_state.chat_session.history:
