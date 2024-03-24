@@ -31,7 +31,7 @@ if "chat_session" not in st.session_state:
 
 
 # Display the chatbot's title on the page
-st.title("🤖 Gemini Pro - ChatBot")
+st.title("🤖 AML Compliance expert.")
 
 # Display the chat history
 for message in st.session_state.chat_session.history:
@@ -39,7 +39,7 @@ for message in st.session_state.chat_session.history:
         st.markdown(message.parts[0].text)
 
 # Input field for user's message
-user_prompt = st.chat_input("Ask Gemini-Pro...")
+user_prompt = st.chat_input("Ask Steve a question about AML compliance...")
 if user_prompt:
     # Add user's message to chat and display it
     model_instruction = """
@@ -68,7 +68,7 @@ if user_prompt:
 # 10. Conclude the analysis by synthesizing the reviewed elements into a detailed, comprehensive report, specifying areas of strength and potential vulnerabilities that could jeopardize the institution’s AML efforts. Include recommendations on resource allocation, personnel training, technological upgrades, procedural enhancements, and strategic initiatives to address identified gaps.
 
 # This investigative procedure will serve as a foundational tool, generating a nuanced understanding of the institution’s AML infrastructure readiness, helping to steer it toward improved compliance and resilience against money laundering threats.
-Please provide a structured response addressing the following question:"""
+"""
     
     modified_prompt = f"{model_instruction}\n{user_prompt}"
     st.chat_message("user").markdown(user_prompt)
