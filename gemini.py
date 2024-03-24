@@ -42,10 +42,12 @@ for message in st.session_state.chat_session.history:
 user_prompt = st.chat_input("Ask Gemini-Pro...")
 if user_prompt:
     # Add user's message to chat and display it
+    model_instruction = "You should behave like a financial expert who has experience in the field for 20 years."
+    modified_prompt = f"{model_instruction}\n{user_prompt}"
     st.chat_message("user").markdown(user_prompt)
 
     # Send user's message to Gemini-Pro and get the response
-    gemini_response = st.session_state.chat_session.send_message(user_prompt)
+    gemini_response = st.session_state.chat_session.send_message(modified_prompt)
 
     # Display Gemini-Pro's response
     with st.chat_message("assistant"):
