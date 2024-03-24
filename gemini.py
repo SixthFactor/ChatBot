@@ -1,7 +1,6 @@
 import os
 
 import streamlit as st
-from dotenv import load_dotenv
 import google.generativeai as gen_ai
 
 # Configure Streamlit page settings
