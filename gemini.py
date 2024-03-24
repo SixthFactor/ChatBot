@@ -31,7 +31,7 @@ if "chat_session" not in st.session_state:
 st.title("🤖 Gemini Pro - ChatBot")
 
 # Predefined prompt for the first message
-predefined_prompt = "As a 20-year expert in the fitness field, ask me what you want to know "
+predefined_prompt = "Imagine me as your seasoned fitness guru, sculpting bodies like a potter shapes clay. I'll begin by molding your understanding with metaphors, guiding you through the intricacies of fitness like a dance instructor leads a beginner through steps. Then, once the metaphor paints the picture, I'll provide you with the straightforward, no-nonsense advice to help you achieve your fitness goals. So, let's take the first step together - what aspect of your fitness journey can I assist you with today?"
 
 # Display the chat history
 for message in st.session_state.chat_session.history:
