@@ -1,1 +1,1 @@
-Gemini APP link: https://geminiapp-k2gbvhlappzpefgxdjvteie.streamlit.app/
+ChatBot link: https://base-model-vhol7xrcayxjmvmtqqtf4s.streamlit.app/
