@@ -3,7 +3,7 @@ import google.generativeai as gen_ai
 from google.generativeai.types.generation_types import BlockedPromptException, StopCandidateException
 
 # Configure Streamlit page settings
-st.set_page_config(page_title="Chat with Gemini-Pro!", page_icon=":brain:", layout="centered")
+st.set_page_config(page_title="Chat with Steve", page_icon=":brain:", layout="centered")
 
 # Your Google API key
 GOOGLE_API_KEY = "AIzaSyC5jVGT9OHx4soEsliU60ByZsieobJPRms"  # Replace this with your real API key
@@ -24,7 +24,7 @@ if "chat_session" not in st.session_state:
     st.session_state.chat_session = model.start_chat(history=[])
 
 # Display the chatbot's title on the page
-st.title("🤖 Gemini Pro - ChatBot")
+st.title("🤖 Steve AML compliance: ChatBot")
 
 # Display the chat history
 for message in st.session_state.chat_session.history:
