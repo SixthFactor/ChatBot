@@ -3,8 +3,7 @@ import streamlit as st
 from openai import OpenAI
 import time
 
-# OPENAI_API_KEY = st.secrets["api_key"]
-OPENAI_API_KEY = "sk-proj-C9mEdGTDzRuM4l221OXQT3BlbkFJBDYvk32i0nw8acNIRnxy"
+OPENAI_API_KEY = st.secrets["api_key"]
 client = OpenAI(api_key=OPENAI_API_KEY)
 thread = client.beta.threads.create()
 
