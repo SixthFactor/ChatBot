@@ -1,50 +1,83 @@
+import openai
 import streamlit as st
-import google.generativeai as gen_ai
-from google.generativeai.types.generation_types import BlockedPromptException, StopCandidateException
+from openai import OpenAI
+import time
+
+# OPENAI_API_KEY = st.secrets["api_key"]
+OPENAI_API_KEY = "sk-proj-C9mEdGTDzRuM4l221OXQT3BlbkFJBDYvk32i0nw8acNIRnxy"
+client = OpenAI(api_key=OPENAI_API_KEY)
+thread = client.beta.threads.create()
+
+# Set the assistant ID and initialize the OpenAI client with your API key
+assistant_id = "asst_PytLeS8CwhZiswnc11HCsmbO"        #replace with your own assistant
+
+def ensure_single_thread_id():
+    if "thread_id" not in st.session_state:
+        thread = client.beta.threads.create()
+        st.session_state.thread_id = thread.id
+    return st.session_state.thread_id
+
+def stream_generator(prompt, thread_id):
+    print(f'first time thread in the function {thread_id}')
+    message = client.beta.threads.messages.create(
+        thread_id=thread_id,
+        role="user",
+        content=prompt
+    )
+
+    with st.spinner("Wait... Generating response..."):  # Spinner starts before the stream
+
+        stream = client.beta.threads.runs.create(
+            thread_id=thread_id,
+            assistant_id=assistant_id,
+            stream=True
+        )
+
+        # Loop through events in the stream
+        for event in stream:
+            if event.data.object == "thread.message.delta":
+                for content in event.data.delta.content:
+                    print(content)
+                    if content.type == 'text':
+                        yield content.text.value + ""  # Once we yield, the spinner stops
+                        time.sleep(0.02)
+            else:
+                pass
 
 # Configure Streamlit page settings
-st.set_page_config(page_title="Chat with Steve", page_icon=":brain:", layout="centered")
+# st.set_page_config(page_icon=":robot:")
 
-# Your Google API key
-GOOGLE_API_KEY = "AIzaSyC5jVGT9OHx4soEsliU60ByZsieobJPRms"  # Replace this with your real API key
+st.title("EIPM Customer Satisfaction Insights")
+# st.caption("Welcome to SixthFactor. Speak Directly to Market Intelligence.🌱")
 
-# Set up Google Gemini-Pro AI model
-gen_ai.configure(api_key=GOOGLE_API_KEY)
-model = gen_ai.GenerativeModel('gemini-pro')
+st.session_state.start_chat = True
 
-# Function to translate roles between Gemini-Pro and Streamlit terminology
-def translate_role_for_streamlit(user_role):
-    if user_role == "model":
-        return "assistant"
-    else:
-        return user_role
+# Initialize session state variables with default values
+if 'start_chat' not in st.session_state:
+    st.session_state['start_chat'] = False
+    
+# Main chat interface
+if st.session_state.start_chat:
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
 
-# Initialize chat session in Streamlit if not already present
-if "chat_session" not in st.session_state:
-    st.session_state.chat_session = model.start_chat(history=[])
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-# Display the chatbot's title on the page
-st.title("🤖 ChatBot")
+prompt = st.chat_input("Ask question to Steve..")
+if prompt:
+    # # Ensure thread ID for conversation continuity (assuming this is a function you've defined)
+    thread_id = ensure_single_thread_id()
+    with st.chat_message("user"):
+        st.markdown(prompt)
+    # # Display user's message
+    st.session_state.messages.append({"role": "user", "content": prompt})
+      # Generate and display response from the assistant
+    with st.chat_message("assistant"):
+        response = st.write_stream(stream_generator(prompt,thread_id))
+    st.session_state.messages.append({"role": "assistant", "content": response})
 
-# Display the chat history
-for message in st.session_state.chat_session.history:
-    with st.chat_message(translate_role_for_streamlit(message.role)):
-        st.markdown(message.parts[0].text)
 
-# Input field for user's message
-user_prompt = st.chat_input("Ask Steve...")
-if user_prompt:
-    try:
-        # Add user's message to chat and display it
-        st.chat_message("user").markdown(user_prompt)
 
-        # Attempt to send user's message to Gemini-Pro and get the response
-        gemini_response = st.session_state.chat_session.send_message(user_prompt)
 
-        # Display Gemini-Pro's response
-        with st.chat_message("assistant"):
-            st.markdown(gemini_response.text)
-    except Exception as e:
-        # Handle any exception by logging and asking the user to try again
-        # st.exception("An error occurred: {}".format(e))
-        st.warning("Please try asking your question again.")
